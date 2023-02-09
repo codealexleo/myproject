@@ -15,11 +15,11 @@ router.get('/', async function (req, res, next) {
 
 router.get('/filter', async function (req, res, next) {
     try {
-        console.log("Filter cards");                        
+        console.log("Filter cards");
         if (req.query.typeId) {
             let result = await Card.filterByType(req.query.typeId);
             res.status(result.status).send(result.result);
-        } else {        
+        } else {
             res.status(400).send({ msg: "No filter provided" });
         }
     } catch (err) {
@@ -62,4 +62,15 @@ router.post("/",
             res.status(500).send(err);
         }
     });
+
+router.get('/:id', async function (req, res, next) {
+    try {
+        console.log("Get card with id " + req.params.id);
+        let result = await Card.getById(req.params.id);
+        res.status(result.status).send(result.result);
+    } catch (err) {
+        console.log(err);
+        res.status(500).send(err);
+    }
+});
 module.exports = router;
