@@ -30,7 +30,7 @@ class Card {
         this.url = url;
         this.lore = lore;
         this.description = description;
-        this.level = level; 
+        this.level = level;
         this.cost = cost;
         this.timeout = timeout;
         this.maxUsage = maxUsage;
@@ -180,13 +180,25 @@ class Card {
                 crd_max_usage=?, crd_type=? where crd_id=?`, [newInfo.name, newInfo.url, newInfo.lore,
                 newInfo.description, newInfo.level, newInfo.cost, newInfo.timeout,
                 newInfo.maxUsage, newInfo.type, newInfo.id]);
-            return { status: 200, result:{msg:"Card edited" }}
+            return { status: 200, result: { msg: "Card edited" } }
         } catch (err) {
             console.log(err);
             return { status: 500, result: err };
         }
     }
-
+    static async deleteById(id) {
+        try {
+            let [result] =
+                await pool.query("delete from cards where crd_id=?", [id]);
+            // if nothing was deleted it means no card exists with that id
+            if (!result.affectedRows)
+                return { status: 404, result: { msg: "No card found with that identifier" } };
+            return { status: 200, result: { msg: "Card deleted!" } };
+        } catch (err) {
+            console.log(err);
+            return { status: 500, result: err };
+        }
+    }
 }
 
 module.exports = Card;
